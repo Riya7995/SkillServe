@@ -155,6 +155,17 @@ const googleLogin = async (req, res) => {
 //Get User Profile
 const getUserProfile = async (req, res) => {
   try {
+    let userId = req.userId;
+    if (!userId) {
+      return res.staus(400).json({ msg: "User Id is required" });
+    }
+    let user = await userModel.findById(userId).select("-password");
+    if (!user) {
+      return res.status(404).json({ msg: "User Not Found" });
+    }
+    return res
+      .status(200)
+      .json({ msg: "User Profile Fetched Successfully", data: user });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Internal Server Error", error });
