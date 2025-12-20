@@ -174,6 +174,18 @@ const getUserProfile = async (req, res) => {
 //Get All User(Admin,provider)
 const getAllUser = async (req, res) => {
   try {
+    if (req.userRole !== "admin") {
+      return res.status(403).json({ msg: "Access Denied! Aamin Only" });
+    }
+    let users = await userModel.find().select().sort({ createdAt: -1 });
+    if (!user || users.length === 0) {
+      return res.status(404).json({ msg: "No Users Found" });
+    }
+    return res.status(200).json({
+      msg: "Users Fetched Successfully",
+      totalUsers: users.length,
+      data: users,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Internal Server Error", error });
@@ -182,6 +194,7 @@ const getAllUser = async (req, res) => {
 //Update User Profile
 const updateUserProfile = async (req, res) => {
   try {
+    
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Internal Server Error", error });
